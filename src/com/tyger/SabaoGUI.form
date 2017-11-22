@@ -286,6 +286,9 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="18" style="0"/>
         </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/com/tyger/save-icon.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Salvar F&#xf3;rmula"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
@@ -303,6 +306,9 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="18" style="0"/>
         </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/com/tyger/open-icon.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Ler F&#xf3;rmula"/>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>
       </Properties>
@@ -319,6 +325,9 @@
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="18" style="0"/>
+        </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/com/tyger/edit-icon.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Editar F&#xf3;rmula"/>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>

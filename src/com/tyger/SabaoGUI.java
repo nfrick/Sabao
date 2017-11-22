@@ -84,7 +84,6 @@ public class SabaoGUI extends javax.swing.JFrame {
         }
 
         sldOleo.setValue((int) (formula.Oleo() * 10.0f));
-        txtOleo.setValue(formula.Oleo());
         sldAgua.setVisible(false);
         sldSoda.setVisible(false);
     }
@@ -326,6 +325,7 @@ public class SabaoGUI extends javax.swing.JFrame {
         getContentPane().add(txtSoda, gridBagConstraints);
 
         btnSave.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/save-icon.png"))); // NOI18N
         btnSave.setText("Salvar Fórmula");
         btnSave.setEnabled(false);
         btnSave.addActionListener(new java.awt.event.ActionListener() {
@@ -340,6 +340,7 @@ public class SabaoGUI extends javax.swing.JFrame {
         getContentPane().add(btnSave, gridBagConstraints);
 
         btnRead.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/open-icon.png"))); // NOI18N
         btnRead.setText("Ler Fórmula");
         btnRead.setName(""); // NOI18N
         btnRead.addActionListener(new java.awt.event.ActionListener() {
@@ -353,6 +354,7 @@ public class SabaoGUI extends javax.swing.JFrame {
         getContentPane().add(btnRead, gridBagConstraints);
 
         btnEdit.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/edit-icon.png"))); // NOI18N
         btnEdit.setText("Editar Fórmula");
         btnEdit.setName(""); // NOI18N
         btnEdit.addActionListener(new java.awt.event.ActionListener() {
@@ -380,12 +382,33 @@ public class SabaoGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_sldOleoStateChanged
 
     private void btnReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReadActionPerformed
-        fileChooser.setDialogTitle("Ler Fórmula");
-        if (fileChooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
-            return;
+        if (EditMode) {
+            Formula novaFormula = new Formula((double) txtOleo.getValue(), (double) txtAgua.getValue(), (double) txtSoda.getValue());
+            if (!formula.equals(novaFormula)) {
+                if (JOptionPane.showConfirmDialog(null, "Descartar alterações na fórmula?",
+                        "Nova Fórmula", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+                    return;
+                }
+            }
+            btnEdit.setText("Editar Fórmula");
+            btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/edit-icon.png")));
+            btnRead.setText("Ler Fórmula");
+            btnRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/open-icon.png")));
+            sldAgua.setVisible(false);
+            sldSoda.setVisible(false);
+            EditMode = false;
+            sldOleo.setValue((int) (formula.Oleo() * 10.0f));
+            txtOleo.setValue(formula.Oleo());
+            txtAgua.setValue(formula.Agua());
+            txtSoda.setValue(formula.Soda());
+        } else {
+            fileChooser.setDialogTitle("Ler Fórmula");
+            if (fileChooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+            ReadFormula(fileChooser.getSelectedFile());
+            txtOleo.setValue(formula.Oleo());
         }
-        ReadFormula(fileChooser.getSelectedFile());
-        txtOleo.setValue(formula.Oleo());
     }//GEN-LAST:event_btnReadActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -401,11 +424,16 @@ public class SabaoGUI extends javax.swing.JFrame {
         EditMode = !EditMode;
         if (EditMode) {
             btnEdit.setText("Fórmula OK");
-            btnSave.setEnabled(false);
+            btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/apply-icon.png")));
+            btnRead.setText("Cancelar");
+            btnRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/delete-icon.png")));
             sldAgua.setValue((int) ((double) txtAgua.getValue() * 10.0f));
             sldSoda.setValue((int) ((double) txtSoda.getValue() * 10.0f));
         } else {
             btnEdit.setText("Editar Fórmula");
+            btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/edit-icon.png")));
+            btnRead.setText("Ler Fórmula");
+            btnRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/open-icon.png")));
             Formula novaFormula = new Formula((double) txtOleo.getValue(), (double) txtAgua.getValue(), (double) txtSoda.getValue());
             if (PendingSave || !formula.equals(novaFormula)) {
                 btnSave.setEnabled(true);
@@ -414,7 +442,6 @@ public class SabaoGUI extends javax.swing.JFrame {
                 PendingSave = true;
             }
         }
-        btnRead.setEnabled(!EditMode);
         sldAgua.setVisible(EditMode);
         sldSoda.setVisible(EditMode);
     }//GEN-LAST:event_btnEditActionPerformed
