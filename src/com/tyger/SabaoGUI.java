@@ -46,6 +46,7 @@ public class SabaoGUI extends javax.swing.JFrame {
     private Formula formula;
     private boolean EditMode = false;
     private boolean PendingSave = false;
+    private DecimalFormat df = new DecimalFormat("#.#");
 
     /**
      * Creates new form SabaoGUI
@@ -65,7 +66,6 @@ public class SabaoGUI extends javax.swing.JFrame {
         initComponents();
 
         this.setLocationRelativeTo(null);
-        DecimalFormat df = new DecimalFormat("#.#");
         Hashtable labelTable = new Hashtable();
         for (int i = 0; i < 201; i += 10) {
             labelTable.put(i, new JLabel(df.format(i / 10)));
@@ -434,7 +434,36 @@ public class SabaoGUI extends javax.swing.JFrame {
             btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/edit-icon.png")));
             btnRead.setText("Ler Fórmula");
             btnRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tyger/open-icon.png")));
-            Formula novaFormula = new Formula((double) txtOleo.getValue(), (double) txtAgua.getValue(), (double) txtSoda.getValue());
+
+            int oleo = sldOleo.getValue();
+            int agua = sldAgua.getValue();
+            int soda = sldSoda.getValue();
+
+            int mdc = gcd(oleo, agua);
+            if (mdc > 1) {
+                mdc = gcd(mdc, soda);
+            }
+
+            double dOleo = (double) oleo / 10.0;
+            double dAgua = (double) agua / 10.0;
+            double dSoda = (double) soda / 10.0;
+
+            if (mdc > 1) {
+                double dMDC = (double) mdc/10.0;
+                if (JOptionPane.showConfirmDialog(null, "Fórmula pode ser simplificada,\ndividindo os valores por " + df.format(dMDC)
+                        + ".\n\nOs novos valores serão:"
+                        + "\n    Óleo: " + df.format(dOleo / dMDC)
+                        + "\n    Água: " + df.format(dAgua / dMDC)
+                        + "\n    Soda: " + df.format(dSoda / dMDC)
+                        + "\n\nSimplificar?",
+                        "Nova Fórmula", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    dOleo = dOleo / dMDC;
+                    dAgua = dAgua / dMDC;
+                    dSoda = dSoda / dMDC;
+                }
+            }
+
+            Formula novaFormula = new Formula(dOleo, dAgua, dSoda);
             if (PendingSave || !formula.equals(novaFormula)) {
                 btnSave.setEnabled(true);
                 formula = novaFormula;
@@ -442,9 +471,20 @@ public class SabaoGUI extends javax.swing.JFrame {
                 PendingSave = true;
             }
         }
+        sldOleo.setValue((int) (formula.Oleo() * 10.0f));
         sldAgua.setVisible(EditMode);
         sldSoda.setVisible(EditMode);
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private static int gcd(int a, int b) {
+        while (b > 0) {
+            int temp = b;
+            b = a % b; // % is remainder
+            a = temp;
+        }
+        return a;
+    }
+
 
     private void sldAguaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sldAguaStateChanged
         txtAgua.setValue((double) sldAgua.getValue() / 10.0f);
